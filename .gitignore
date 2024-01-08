@@ -30,3 +30,9 @@
 *.exe
 *.out
 *.app
+
+# Custom
+.vscode/
+build/
+managed_components/
+dependencies.lock
