@@ -29,6 +29,11 @@ uint16_t plugin_unit_endpoint_id_2 = 0;
 uint16_t plugin_unit_endpoint_id_3 = 0;
 uint16_t plugin_unit_endpoint_id_4 = 0;
 
+#define CHANNEL_1_PIN GPIO_NUM_33
+#define CHANNEL_2_PIN GPIO_NUM_25
+#define CHANNEL_3_PIN GPIO_NUM_26
+#define CHANNEL_4_PIN GPIO_NUM_27
+
 using namespace esp_matter;
 using namespace esp_matter::attribute;
 using namespace esp_matter::endpoint;
@@ -89,7 +94,27 @@ static esp_err_t app_attribute_update_cb(callback_type_t type, uint16_t endpoint
     {
         /* Handle the attribute updates here. */
         bool new_state = val->val.b;
-        gpio_set_level(GPIO_NUM_2, new_state);
+        ESP_LOGE(TAG, "SET Endpoint %d to %d", endpoint_id, new_state);
+        if (endpoint_id == plugin_unit_endpoint_id_1)
+        {
+            gpio_set_level(CHANNEL_1_PIN, new_state);
+            ESP_LOGE(TAG, "SET CHANNEL 1 to %d", new_state);
+        }
+        else if (endpoint_id == plugin_unit_endpoint_id_2)
+        {
+            gpio_set_level(CHANNEL_2_PIN, new_state);
+            ESP_LOGE(TAG, "SET CHANNEL 2 to %d", new_state);
+        }
+        else if (endpoint_id == plugin_unit_endpoint_id_3)
+        {
+            gpio_set_level(CHANNEL_3_PIN, new_state);
+            ESP_LOGE(TAG, "SET CHANNEL 3 to %d", new_state);
+        }
+        else if (endpoint_id == plugin_unit_endpoint_id_4)
+        {
+            gpio_set_level(CHANNEL_4_PIN, new_state);
+            ESP_LOGE(TAG, "SET CHANNEL 4 to %d", new_state);
+        }
     }
 
     return ESP_OK;
@@ -102,7 +127,10 @@ extern "C" void app_main()
     /* Initialize the ESP NVS layer */
     nvs_flash_init();
 
-    gpio_set_direction(GPIO_NUM_2, GPIO_MODE_OUTPUT);
+    gpio_set_direction(CHANNEL_1_PIN, GPIO_MODE_OUTPUT);
+    gpio_set_direction(CHANNEL_2_PIN, GPIO_MODE_OUTPUT);
+    gpio_set_direction(CHANNEL_3_PIN, GPIO_MODE_OUTPUT);
+    gpio_set_direction(CHANNEL_4_PIN, GPIO_MODE_OUTPUT);
 
     /* Initialize driver */
     app_driver_handle_t switch_handle = app_driver_switch_init();
@@ -141,9 +169,9 @@ extern "C" void app_main()
     ESP_LOGI(TAG, "Switch 1 created with endpoint_id %d", plugin_unit_endpoint_id_1);
     plugin_unit_endpoint_id_2 = endpoint::get_id(endpoint_2);
     ESP_LOGI(TAG, "Switch 2 created with endpoint_id %d", plugin_unit_endpoint_id_2);
-    plugin_unit_endpoint_id_3 = endpoint::get_id(endpoint_1);
+    plugin_unit_endpoint_id_3 = endpoint::get_id(endpoint_3);
     ESP_LOGI(TAG, "Switch 3 created with endpoint_id %d", plugin_unit_endpoint_id_3);
-    plugin_unit_endpoint_id_4 = endpoint::get_id(endpoint_2);
+    plugin_unit_endpoint_id_4 = endpoint::get_id(endpoint_4);
     ESP_LOGI(TAG, "Switch 4 created with endpoint_id %d", plugin_unit_endpoint_id_4);
 
 #if CHIP_DEVICE_CONFIG_ENABLE_THREAD
