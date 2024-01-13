@@ -1,0 +1,60 @@
+name: Build
+
+on:
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        board:
+          - esp32
+          # - esp32h2
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      # - name: Restore managed components
+      #   id: cache-managed-components
+      #   uses: actions/cache@v3
+      #   with:
+      #     path: ${{ github.workspace }}/managed_components
+      #     key: idf-managed_components-${{ matrix.board }}-${{ hashFiles('dependencies.lock') }}
+      #     restore-keys: |
+      #       idf-managed_components-${{ matrix.board }}-
+
+      - name: Build project
+        uses: oleksiikutuzov/esp-matter-action@main
+        with:
+          target: ${{ matrix.board }}
+          command: |
+            echo '::add-matcher::$GITHUB_WORKSPACE/.github/problem_matcher.json'
+            idf.py --ccache build
+            chmod -R 755 ./build
+
+      # - name: Create install script
+      #   run: |
+      #     echo "esptool.py -b 460800 \
+      #       --before default_reset \
+      #       --after hard_reset \
+      #       --chip esp32 write_flash \
+      #       --flash_mode dio \
+      #       --flash_size 4MB \
+      #       --flash_freq 40m \
+      #       0x1000 bootloader/bootloader.bin \
+      #       0xc000 partition_table/partition-table.bin \
+      #       0x1d000 ota_data_initial.bin \
+      #       0x20000 plugin-unit.bin" > $GITHUB_WORKSPACE/build/install-${{ matrix.board }}.sh
+
+      - name: Export artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: built-binaries-${{ matrix.board }}
+          path: |
+            build/bootloader/bootloader.bin
+            build/partition_table/partition-table.bin
+            build/ota_data_initial.bin
+            build/plugin-unit.bin
