@@ -1,3 +1,5 @@
+CONFIG_IDF_TARGET_ESP32=y
+
 # Default to 921600 baud when flashing and monitoring device
 CONFIG_ESPTOOLPY_BAUD_921600B=y
 CONFIG_ESPTOOLPY_BAUD=921600

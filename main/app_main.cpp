@@ -17,6 +17,8 @@
 #include <app_priv.h>
 #include <app_reset.h>
 
+#include <board_config.h>
+
 #include "driver/gpio.h"
 
 #if CHIP_DEVICE_CONFIG_ENABLE_THREAD
@@ -28,11 +30,6 @@ uint16_t plugin_unit_endpoint_id_1 = 0;
 uint16_t plugin_unit_endpoint_id_2 = 0;
 uint16_t plugin_unit_endpoint_id_3 = 0;
 uint16_t plugin_unit_endpoint_id_4 = 0;
-
-#define CHANNEL_1_PIN GPIO_NUM_33
-#define CHANNEL_2_PIN GPIO_NUM_25
-#define CHANNEL_3_PIN GPIO_NUM_26
-#define CHANNEL_4_PIN GPIO_NUM_27
 
 using namespace esp_matter;
 using namespace esp_matter::attribute;

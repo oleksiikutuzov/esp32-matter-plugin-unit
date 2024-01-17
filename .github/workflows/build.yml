@@ -11,7 +11,7 @@ jobs:
       matrix:
         board:
           - esp32
-          # - esp32h2
+          - esp32h2
 
     steps:
       - name: Checkout
