@@ -15,6 +15,7 @@ jobs:
         board:
           - esp32
           - esp32h2
+          - esp32c6
 
     steps:
       - name: Checkout
